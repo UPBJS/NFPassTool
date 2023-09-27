@@ -150,7 +150,7 @@ def main():
                 lst.start()
                 combinations1 = [' '.join(i) for i in product(characters1, repeat=1)]
                 combinations2 = [' '.join(i) for i in product(characters2, repeat=6)]
-                combinations3 = [[' '.join(i) for i in product(characters3, repeat=1)]]
+                combinations3 = [' '.join(i) for i in product(characters3, repeat=1)]
                 for keyword in kwlist:
                     for combination1 in combinations1:
                         combination1 = combination1.replace(" ", "")
