@@ -173,13 +173,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         printred("\n[ERROR] Exiting...")
-
-
-""" 
-
-TODO:
-    SEMI-IMPORTANT: Add argument functionality 
-        -Add an intensity level to the password making (lower might have the 2ndcomb ex. marks just in the last few digits)
-    Have threads do some work simultaneously for every keyword ? - Just a suggestion
-
-"""
