@@ -57,17 +57,18 @@ def yellow(text, reset=True):
 
 reset = Fore.RESET
 
+global finish
+finish = False
 
 def loadingscreen():
     percent = 0
     while True:
-        if percent < 100:
+        if finish == False and percent < 100:
             cursize = os.path.getsize(passfile)
             percent = (cursize / estspace) * 100
             barempty = " " * 100
             bar = barempty.replace(" ", "#", int(percent))
             print(f"[{bar}] {round(percent, 1)}%", end="\r")
-            time.sleep(0.2)
         else:
             exit()
     
@@ -116,9 +117,9 @@ def main():
         passfile = newresultpath
 
         # PASSWORD MAKING FACTORY, oompa loompa whoopity doo, when we're in the factory some passwords we do...
-        characters1 = "!@$ "
+        characters1 = " !@$"
         characters2 =  "0123456789! "
-        characters3 = "!# "
+        characters3 = " !#"
 
         freespace = int(shutil.disk_usage("/")[2])
 
@@ -126,14 +127,15 @@ def main():
         for kw in kwlist:
             totalkwlen += len(kw)
 
-        tbused = len(kwlist) * (len(characters1)) * (len(characters2)**6) * (len(characters3)) * (1 + totalkwlen + 6 + 1)
+        tbused = len(kwlist) * (len(characters1)) * (len(characters2)**3) * (len(characters3)) * (1 + totalkwlen + 3 + 1)
+        print(tbused)
         if freespace - tbused < 1073741824: # If (the space left after operation - 1GB (just to be safe)) is less than 0, exit the program
             printred("[ERROR] Not enough space left on disk, terminating program...")
             exit()
         else:
             global estspace 
             estspace = tbused
-            printred(f'[WARNING] The size of the password list will be approx. {yellow(tbused // 1024**2, reset=False)} MB')
+            printred(f'[WARNING] The size of the password list will be approx. {yellow(tbused // 1024, reset=False)} KB')
             printred(f'[WARNING] {yellow((freespace - tbused) // 1024**2, reset=False)} MB {red("will be left on this disk after the operation")}')
 
         invalidapproval = True
@@ -148,8 +150,11 @@ def main():
                 printred("\n[WARNING] Exiting the program at this time will terminate the current operation and you will have to start over again")
                 printyellow("[INFO] Please wait... ")
                 lst.start()
+
+                checkset = set()
+
                 combinations1 = [' '.join(i) for i in product(characters1, repeat=1)]
-                combinations2 = [' '.join(i) for i in product(characters2, repeat=6)]
+                combinations2 = [' '.join(i) for i in product(characters2, repeat=3)]
                 combinations3 = [' '.join(i) for i in product(characters3, repeat=1)]
                 for keyword in kwlist:
                     for combination1 in combinations1:
@@ -157,10 +162,16 @@ def main():
                         for combination2 in combinations2:
                             combination2 = combination2.replace(" ", "")
                             for combination3 in combinations3:
-                                open(passfile, "a").write(f"{combination1}{keyword}{combination2}{combination3}\n")
-                printyellow(f"[INFO] The passwords file is saved in {passfile}")
-                printgreen("[SUCCESS] Press ENTER to close the program...")
-                input()
+
+                                if f"{combination1}{keyword}{combination2}{combination3}\n" not in checkset:
+                                    open(passfile, "a").write(f"{combination1}{keyword}{combination2}{combination3}\n")
+                                    checkset.add(f"{combination1}{keyword}{combination2}{combination3}\n")
+                                else:
+                                    continue
+                finish = True
+                printyellow(f"[INFO] The passlist file is saved in {Path(passfile).resolve()}")
+                printgreen(f"[SUCCESS] Thank you for using my tool {red('<3')}")
+
             elif approval == "no":
                 raise(KeyboardInterrupt)
             else:
@@ -173,3 +184,15 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         printred("\n[ERROR] Exiting...")
+
+
+""" 
+
+TODO:
+    IMPORTAAAANTTT: Fix loading bar
+
+    SEMI-IMPORTANT: Add argument functionality 
+        -Add an intensity level to the password making 
+    Have threads do some work simultaneously for every keyword ? - Just a suggestion
+
+"""
