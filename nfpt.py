@@ -184,15 +184,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         printred("\n[ERROR] Exiting...")
-
-
-""" 
-
-TODO:
-    IMPORTAAAANTTT: Fix loading bar
-
-    SEMI-IMPORTANT: Add argument functionality 
-        -Add an intensity level to the password making 
-    Have threads do some work simultaneously for every keyword ? - Just a suggestion
-
-"""
